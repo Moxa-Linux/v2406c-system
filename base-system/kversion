@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#PRODUCT_NAME="MPC-`cat /sys/class/dmi/id/product_name|cut -f2 -d-`"
+#PRODUCT_NAME="MPC-`cat /sys/class/dmi/id/board_name|cut -f2 -d-`"
+#[ -z "$PRODUCT_NAME" ] && PRODUCT_NAME="V-2406C"
+
+PRODUCT_NAME="V-2406C"
+VERSION=1.0.0
+
+if [ "$1" = "-a" ]; then
+	str_version="$PRODUCT_NAME firmware version $VERSION Build `cat /etc/.builddate`"
+else
+	str_version="$PRODUCT_NAME"
+fi
+
+echo $str_version

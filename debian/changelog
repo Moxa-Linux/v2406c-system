@@ -1,0 +1,10 @@
+v2406c-system (1.0.0+deb9) stretch; urgency=low
+
+  * Initial release.
+  * Drivers: moxa-misc-da820c, pca-9535 and hid-ft260
+  * Utility: setinterface
+  * Firmware: kbl_dmc_ver1_01.bin and kbl_dmc_ver1_04.bin
+  * Service: mx_gpio_export
+  * Udev rules: 10-serial.rules
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Wed, 22 Aug 2018 16:04:03 +0800

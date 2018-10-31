@@ -1,0 +1,11 @@
+[Unit]
+Description=Moxa GPIO sysfs node export service
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/mx_gpio_export start
+ExecStop=/sbin/mx_gpio_export stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+base-system/motd /etc
+base-system/10-serial.rules /etc/udev/rules.d
+base-system/mx_gpio_export.service /etc/systemd/system/multi-user.target.wants
+base-system/mx_gpio_export /sbin
+base-system/setinterface /sbin
+base-system/kversion /sbin
