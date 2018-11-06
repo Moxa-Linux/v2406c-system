@@ -19,18 +19,19 @@ set -e
 
 
 case "$1" in
-    configure)
-    echo "i2c-dev" >> /etc/modules
-    echo "misc-moxa-v2406c" >> /etc/modules
-    echo "hid_cp2112" >> /etc/modules
-    echo "ina2xx" >> /etc/modules
-    echo "ltc4151" >> /etc/modules
-    ;;
+	configure)
+	echo "i2c-dev" >> /etc/modules
+	echo "misc-moxa-v2406c" >> /etc/modules
+	echo "hid_cp2112" >> /etc/modules
+	echo "ina2xx" >> /etc/modules
+	echo "ltc4151" >> /etc/modules
+	echo "it8786_wdt" >> /etc/modules
+	;;
 
-    abort-upgrade|abort-remove|abort-deconfigure)
-    ;;
+	abort-upgrade|abort-remove|abort-deconfigure)
+	;;
 
-    *)
+	*)
         echo "postinst called with unknown argument \`$1'" >&2
         exit 1
     ;;
