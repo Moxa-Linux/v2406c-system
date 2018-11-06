@@ -1,0 +1,12 @@
+[Unit]
+Description=Moxa V-2406C platform initial service
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/mx_init start
+ExecStop=/sbin/mx_init stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+

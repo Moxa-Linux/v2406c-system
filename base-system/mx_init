@@ -1,0 +1,17 @@
+#! /bin/bash
+
+case "$1" in
+	start)
+	echo ina219 0x41 > /sys/bus/i2c/devices/i2c-1/new_device
+	echo ina219 0x44 > /sys/bus/i2c/devices/i2c-1/new_device
+	echo ltc4151 0x69 > /sys/bus/i2c/devices/i2c-1/new_device
+	echo ltc4151 0x6f > /sys/bus/i2c/devices/i2c-1/new_device
+	;;
+	stop)
+	;;
+	*)
+	echo "Usage: $0 start|stop" >&2
+	exit 3
+        ;;
+esac
+
