@@ -20,12 +20,38 @@ set -e
 
 case "$1" in
 	configure)
-	echo "i2c-dev" >> /etc/modules
-	echo "misc-moxa-v2406c" >> /etc/modules
-	echo "hid_cp2112" >> /etc/modules
-	echo "ina2xx" >> /etc/modules
-	echo "ltc4151" >> /etc/modules
-	echo "it8786_wdt" >> /etc/modules
+	grep -q "i2c-dev" /etc/modules
+	if [ "$?" != "0" ]; then
+		sed -i '$ a i2c-dev' /etc/modules
+	fi
+
+	grep -q "misc-moxa-v2406c" /etc/modules
+	if [ "$?" != "0" ]; then
+		sed -i '$ a misc-moxa-v2406c' /etc/modules
+	fi
+
+	grep -q "hid_cp2112" /etc/modules
+	if [ "$?" != "0" ]; then
+		sed -i '$ a hid_cp2112' /etc/modules
+	fi
+
+	grep -q "ina2xx" /etc/modules
+	if [ "$?" != "0" ]; then
+		sed -i '$ a ina2xx' /etc/modules
+	fi
+
+	grep -q "ltc4151" /etc/modules
+	if [ "$?" != "0" ]; then
+		sed -i '$ a ltc4151' /etc/modules
+	fi
+
+	grep -q "it8786_wdt" /etc/modules
+	if [ "$?" != "0" ]; then
+		sed -i '$ a it8786_wdt' /etc/modules
+	fi
+
+	# update grub for disable network interface rename
+	update-grub
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)
