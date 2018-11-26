@@ -19,7 +19,7 @@ Description: V-2406C standard kernel modules
  The Linux kernel modules for use on V-2406C
 
 Package: v2406c-moxa-firmware
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends},
 Description: V-2406C platform firmware files.
  The Linux firmare files for use on V-2406C
