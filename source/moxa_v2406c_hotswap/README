@@ -1,0 +1,40 @@
+The hotswap driver is for moxa V2616A embedded computer. "/dev/hotswap" is the entry point for tracking the disks hotswapping. You can use the 'mxhtspd' to monitor and programming the button and harddisk hotswap. The mxhtspd provides a callback script for stopping your program and hotswapping your disk in run time. Following describes how to compile this driver.
+
+1. Setting the path to your kernel source tree in Makefile.
+
+	To compile this driver, you should modify the KDIR to the path of your kernel source. We configure the KDIR in Makefile for configuring the path of the kernel source.
+
+	The original KDIR
+
+	KDIR:=$(ROOTDIR)/$(LINUXDIR)
+
+	The new KDIR
+
+	KDIR=/media/Home/work/x86/kernel/linux-source-3.2
+
+2. Compile your kernel before makeing the module.
+
+3. Compile the driver after your kernel source has compiled.
+
+	$ cd /home/moxa/git/V2616A/modules/moxa_v2616A_hotswap
+	$ make
+	  Building modules, stage 2.
+	  ...
+	  LD [M]  /home/moxa/git/V2616A/modules/moxa_v2616A_hotswap/moxa_hotswap.ko
+
+4. Load this driver
+
+	You can copy it to target and load it.
+
+	$ insmod /PATH/TO/moxa_hotswap.ko
+
+5. Use the mxhtspd to monitor the disk hotswap event
+
+	To start it:
+
+	$ /etc/init.d/mxhtspd.sh start
+
+	To stop it:
+
+	$ /etc/init.d/mxhtspd.sh stop
+
