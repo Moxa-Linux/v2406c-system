@@ -100,12 +100,11 @@ static u8 pciepwr_pin_def[] = {
 	GPIO_GROUP_8, GPIO_BIT_3,	/* pciepwr_2 */
 };
 
-/* sin card select */
+/* sim card select */
 static u8 sim_sel_pin_def[] = {
 	GPIO_GROUP_8, GPIO_BIT_0,	/* sim_sel_1 */
 	GPIO_GROUP_8, GPIO_BIT_2,	/* sim_sel_2 */
 };
-
 
 static u8 ports[1] = { 0x2e };
 static u8 port;

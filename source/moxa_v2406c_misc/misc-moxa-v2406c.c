@@ -408,56 +408,11 @@ ssize_t sif_read(struct file *filp, char __user *buf, size_t count,
 	return sizeof(stack_buf);
 }
 
-/* 
- * ioctl - I/O control
- */
-static long sif_ioctl(struct file *file,unsigned int cmd, unsigned long arg)
-{
-	unsigned char port;
-	unsigned char opmode;
-	int val;
-
-	switch (cmd) {
-	case MOXA_SET_OP_MODE:
-		if (copy_from_user(&opmode, (unsigned char *) arg, sizeof(opmode))) {
-			return -EFAULT;
-		}
-		port = opmode >> 4 ;
-		opmode = opmode & 0xf;
-		if (0 != uartif_set(opmode >> 4, opmode & 0xf)) {
-			printk("uart: the mode is not supported, \
-the input is %x\n", opmode);
-			return -EFAULT;
-		}
-
-		break;
-
-	case MOXA_GET_OP_MODE:
-		if(copy_from_user(&port, (unsigned char *)arg, sizeof(port))){
-			return -EFAULT;
-		}
-
-		if(0 != uartif_get(port, &val)) {
-			return -EINVAL;
-		}
-		opmode = val;
-		if(copy_to_user((unsigned char*)arg, &opmode, sizeof(opmode))) {
-			return -EFAULT;
-		}
-		break;
-	default:
-		return -EINVAL;
-	}
-
-	return 0;
-}
-
 /* define which file operations are supported */
 struct file_operations sif_fops = {
 	.owner		= THIS_MODULE,
 	.write		= sif_write,
 	.read		= sif_read,
-	.unlocked_ioctl	= sif_ioctl,
 	.open		= sif_open,
 	.release	= sif_release,
 };
