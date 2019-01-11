@@ -1,0 +1,70 @@
+#! /bin/bash
+
+export_gpio() {
+	local TARGET_GPIOCHIP=$1
+	local GPIOCHIP_NAME=gpiochip
+	local GPIO_FS_PATH=/sys/class/gpio
+	local GPIO_EXPORT="export"
+
+	if [ x"$2" == x"unexport" ]; then
+		GPIO_EXPORT="unexport"
+	fi
+
+	#
+	# Export GPIOs
+	#
+	ls $GPIO_FS_PATH | grep $GPIOCHIP_NAME | while read -r chip ; do
+		GPIO_LABEL=$(cat $GPIO_FS_PATH/$chip/label)
+		if [[ "$GPIO_LABEL" != *"$TARGET_GPIOCHIP"* ]]; then
+			continue
+	fi
+
+		pinstart=$(echo $chip | sed s/$GPIOCHIP_NAME/\\n/g)
+		count=$(cat $GPIO_FS_PATH/$chip/ngpio)
+		for (( i=0; i<${count}; i++ )); do
+			echo $((${pinstart}+${i})) > $GPIO_FS_PATH/$GPIO_EXPORT 2>/dev/null
+		done
+	done
+}
+
+bind_hwm_driver() {
+	for filename in /sys/bus/i2c/devices/i2c-*/name; do
+		i2c_devname=$(cat ${filename})
+		if [[ $i2c_devname == *"CP2112"* ]]; then
+			i2c_devpath=$(echo ${filename%/*})
+			echo "ina219 0x41" > ${i2c_devpath}/new_device
+			echo "ina219 0x44" > ${i2c_devpath}/new_device
+			echo "ltc4151 0x69" > ${i2c_devpath}/new_device
+			echo "ltc4151 0x6f" > ${i2c_devpath}/new_device
+		fi
+	done
+}
+
+unbind_hwm_driver() {
+	for filename in /sys/bus/i2c/devices/i2c-*/name; do
+		i2c_devname=$(cat ${filename})
+		if [[ $i2c_devname == *"CP2112"* ]]; then
+			i2c_devpath=$(echo ${filename%/*})
+			echo "0x41" > ${i2c_devpath}/delete_device
+			echo "0x44" > ${i2c_devpath}/delete_device
+			echo "0x69" > ${i2c_devpath}/delete_device
+			echo "0x6f" > ${i2c_devpath}/delete_device
+		fi
+	done
+}
+
+
+case "$1" in
+	start)
+		bind_hwm_driver
+		export_gpio "moxa-gpio"
+	;;
+	stop)
+		export_gpio "moxa-gpio" unexport
+		unbind_hwm_driver
+	;;
+	*)
+		echo "Usage: $0 start|stop" >&2
+		exit 3
+	;;
+esac

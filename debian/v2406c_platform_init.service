@@ -1,0 +1,12 @@
+[Unit]
+Description=Moxa V2406C series initial setting
+After=getty.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/v2406c_platform_init start
+ExecStop=/sbin/v2406c_platform_init stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target poweroff.target
