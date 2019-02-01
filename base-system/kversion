@@ -1,16 +1,45 @@
-#!/bin/sh
+#!/bin/bash
 
-#PRODUCT_NAME="MPC-`cat /sys/class/dmi/id/product_name|cut -f2 -d-`"
-#PRODUCT_NAME="MPC-`cat /sys/class/dmi/id/board_name|cut -f2 -d-`"
-#[ -z "$PRODUCT_NAME" ] && PRODUCT_NAME="V-2406C"
+# Please ensure that the following default value has been filled
+DEFAULT_NAME="V"
+DEFAULT_FULLNAME="V-2406C"
 
-PRODUCT_NAME="V-2406C"
-VERSION=1.0.0
+PCBA_NAME=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 11-16 | xargs`
+PCBA_NUMBER=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 17-21 | xargs`
+PCBA_SERIAL=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 22 | xargs`
+PCBA_TYPE=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 23-24 | xargs`
+PCBA_VERSION=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 25-27 | xargs`
 
-if [ "$1" = "-a" ]; then
-	str_version="$PRODUCT_NAME firmware version $VERSION Build `cat /etc/.builddate`"
+if [ -z "$PCBA_NAME" ] || [ -z "$PCBA_NUMBER" ]; then
+	PRODUCT_NAME=$DEFAULT_FULLNAME
 else
-	str_version="$PRODUCT_NAME"
+	PRODUCT_NAME="${PCBA_NAME}-${PCBA_NUMBER}"
 fi
 
-echo $str_version
+case "${1}" in
+	-a|--all)
+		echo "$PRODUCT_NAME firmware version `cat /etc/.moxaversion` build `cat /etc/.moxabuildtime`"
+		;;
+	-s|--serial)
+		echo "$PCBA_SERIAL"
+		;;
+	-t|--type)
+		echo "$PCBA_TYPE"
+		;;
+	-v|--version)
+		echo "$PCBA_SERIAL"
+		;;
+	-h|--help)
+		echo -e "Usage:"
+		echo -e "	kversion [OPTIONS]"
+		echo -e "Options:"
+		echo -e "	-a, --all		show firmware version and build date"
+		echo -e "	-s, --serial		show PCBA serial number"
+		echo -e "	-t, --type		show PCBA type number(00-CPU Board, 01-Carrier Board, 02-Riser card)"
+		echo -e "	-v, --version		show PCBA version"
+		echo -e "	-h, --help		show this help page"
+		;;
+	*)
+		echo "$PRODUCT_NAME"
+		;;
+esac
