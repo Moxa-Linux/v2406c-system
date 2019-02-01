@@ -6,3 +6,4 @@ base-system/kversion /sbin
 base-system/blacklist.conf /etc/modprobe.d
 base-system/grub /etc/default/
 base-system/moxa-dio-control.json /etc/moxa-configs
+base-system/v2406c_sensors.conf /etc/sensors.d/
