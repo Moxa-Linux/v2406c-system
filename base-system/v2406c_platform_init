@@ -38,6 +38,15 @@ bind_hwm_driver() {
 			echo "ltc4151 0x6f" > ${i2c_devpath}/new_device
 		fi
 	done
+
+	# for setup power monitor ina219 shunt resistor as 1 mohm
+	for filename in /sys/class/hwmon/hwmon*/name; do
+		hwmon_devname=$(cat ${filename})
+		if [[ $hwmon_devname == *"ina219"* ]]; then
+			hwmon_devpath=$(echo ${filename%/*})
+			echo "1000" > ${hwmon_devpath}/shunt_resistor
+		fi
+	done
 }
 
 unbind_hwm_driver() {
