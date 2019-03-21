@@ -106,6 +106,12 @@ static u8 sim_sel_pin_def[] = {
 	GPIO_GROUP_8, GPIO_BIT_2,	/* sim_sel_2 */
 };
 
+/* DIP switch select */
+static u8 dip_sel_pin_def[] = {
+	GPIO_GROUP_2, GPIO_BIT_7,	/* dip_sel_1 */
+	GPIO_GROUP_6, GPIO_BIT_7,	/* dip_sel_2 */
+};
+
 static u8 ports[1] = { 0x2e };
 static u8 port;
  
@@ -353,6 +359,21 @@ int sim_sel_get(unsigned num, int *val)
 	}
 
 	*val = read_gpio(sim_sel_pin_def, num);
+	return 0;
+}
+/*
+int dip_sel_set(unsigned num, int val)
+{
+	return 0;
+}
+*/
+int dip_sel_get(unsigned num, int *val)
+{
+	if (num >= (sizeof(dip_sel_pin_def)/2)) {
+		return -EINVAL;
+	}
+
+	*val = read_gpio(dip_sel_pin_def, num);
 	return 0;
 }
 

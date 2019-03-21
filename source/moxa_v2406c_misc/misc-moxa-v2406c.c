@@ -1,6 +1,7 @@
 /*
  * This driver is for Moxa embedded computer programmble led, relay,
- * miniPCIe power, sim slot select driver. It based on IT8786 GPIO hardware.
+ * miniPCIe power, sim slot select, and DIP switch detect driver.
+ * It based on IT8786 GPIO hardware.
  *
  * History:
  * Date		Aurhor		Comment
@@ -48,18 +49,25 @@
 #define	SIM_A			1
 #define	SIM_B			0
 
+#define DIP_NUM			2
+#define DIP_PATTERN		"11"
+#define	DIP_1			1
+#define	DIP_2			0
+
 /* mknod /dev/uart c 10 105 for this module */
 #define MOXA_SIF_MINOR		105
 #define MOXA_DI_MINOR		(MOXA_SIF_MINOR+1)
 #define MOXA_DO_MINOR		(MOXA_DI_MINOR+1)
 #define MOXA_SIM_MINOR		(MOXA_DO_MINOR+1)
 #define MOXA_PCIEPWR_MINOR	(MOXA_SIM_MINOR+1)
+#define MOXA_DIP_MINOR		(MOXA_PCIEPWR_MINOR+1)
 
 #define SIF_NAME		"uart"
 #define DI_NAME			"di"
 #define DO_NAME			"do"
 #define SIM_NAME		"sim_sel"
 #define PCIEPWR_NAME		"pciepwr"
+#define DIP_NAME		"dip"
 
 /* Ioctl number */
 #define MOXA			0x400
@@ -814,6 +822,39 @@ static struct gpio_chip moxa_gpio_sim_sel_chip = {
 	.names		= gpio_sim_sel_names
 };
 
+/*
+ * module: DIP switch select chip-section
+ */
+static int moxa_gpio_dip_sel_get(struct gpio_chip *gc, unsigned gpio_num)
+{
+	int val;
+	if (0==dip_sel_get(gpio_num, &val)) {
+		if (DIP_1==val)
+			return 1;
+	}
+	return 0;
+}
+
+static void moxa_gpio_dip_sel_set(struct gpio_chip *gc, unsigned gpio_num, int val)
+{
+	/* do nothing */
+	return ;
+}
+
+const char *gpio_dip_sel_names[] = {
+	"dip_sel_1",
+	"dip_sel_2",
+};
+
+static struct gpio_chip moxa_gpio_dip_sel_chip = {
+	.label		= "moxa-gpio-dip-sel",
+	.owner		= THIS_MODULE,
+	.get		= moxa_gpio_dip_sel_get,
+	.set		= moxa_gpio_dip_sel_set,
+	.base		= -1,
+	.ngpio		= sizeof(dip_sel_pin_def)/2,
+	.names		= gpio_dip_sel_names
+};
 
 #endif /* SUPPORT_GPIOSYSFS */
 
@@ -893,10 +934,18 @@ static int __init moxa_misc_init_module (void)
 		goto moxa_misc_init_module_err11;
 	}
 
+	retval = gpiochip_add(&moxa_gpio_dip_sel_chip);
+	if(retval < 0) {
+		printk("Moxa DIP switch select control driver: gpiochip_add(&moxa_gpio_dip_sel_chip) fail !\n");
+		goto moxa_misc_init_module_err12;
+	}
+
 #endif /* SUPPORT_GPIOSYSFS */
 
 	return 0;
 #ifdef CONFIG_GPIO_SYSFS
+moxa_misc_init_module_err12:
+	gpiochip_remove(&moxa_gpio_sim_sel_chip);
 moxa_misc_init_module_err11:
 	gpiochip_remove(&moxa_gpio_pciepwr_chip);
 moxa_misc_init_module_err10:
@@ -937,6 +986,7 @@ static void __exit moxa_misc_cleanup_module (void)
 	gpiochip_remove(&moxa_gpio_do_chip);
 	gpiochip_remove(&moxa_gpio_pciepwr_chip);
 	gpiochip_remove(&moxa_gpio_sim_sel_chip);
+	gpiochip_remove(&moxa_gpio_dip_sel_chip);
 #endif /* SUPPORT_GPIOSYSFS */
 	gpio_exit();
 }
