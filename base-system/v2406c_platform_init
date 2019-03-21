@@ -62,11 +62,26 @@ unbind_hwm_driver() {
 	done
 }
 
+# HIGH means miniPCIe for cellular, LOW means for wifi
+power_on_cellular_module() {
+	for filename in /sys/class/gpio/dip_sel_*/value; do
+		value=$(cat ${filename})
+		if [[ $value == 1 ]]; then
+			devpath=$(echo ${filename%/*})
+			index=$(echo ${devpath##*dip_sel_})
+			# TODO: maybe need power seq for specific power module
+			echo 1 > /sys/class/gpio/pciepwr_${index}/value
+		fi
+	done
+}
 
 case "$1" in
 	start)
 		bind_hwm_driver
 		export_gpio "moxa-gpio"
+
+		sleep 1
+		power_on_cellular_module
 	;;
 	stop)
 		export_gpio "moxa-gpio" unexport
