@@ -80,18 +80,18 @@ static u8 uartif_pin_def[] = {
 
 /* DI pin */
 static u8 di_pin_def[] = {
-	GPIO_GROUP_7, GPIO_BIT_0,	/* di1 */
-	GPIO_GROUP_7, GPIO_BIT_1,	/* di2 */
-	GPIO_GROUP_7, GPIO_BIT_2,	/* di3 */
-	GPIO_GROUP_7, GPIO_BIT_3,	/* di4 */
+	GPIO_GROUP_7, GPIO_BIT_0,	/* di0 */
+	GPIO_GROUP_7, GPIO_BIT_1,	/* di1 */
+	GPIO_GROUP_7, GPIO_BIT_2,	/* di2 */
+	GPIO_GROUP_7, GPIO_BIT_3,	/* di3 */
+	GPIO_GROUP_7, GPIO_BIT_4,	/* di4 */
+	GPIO_GROUP_7, GPIO_BIT_5,	/* di5 */
 };
 
 /* DO pin */
 static u8 do_pin_def[] = {
-	GPIO_GROUP_7, GPIO_BIT_4,	/* do1 */
-	GPIO_GROUP_7, GPIO_BIT_5,	/* do2 */
-	GPIO_GROUP_7, GPIO_BIT_6,	/* do3 */
-	GPIO_GROUP_7, GPIO_BIT_7,	/* do4 */
+	GPIO_GROUP_7, GPIO_BIT_6,	/* do0 */
+	GPIO_GROUP_7, GPIO_BIT_7,	/* do1 */
 };
 
 /* miniPCIe power */

@@ -14,10 +14,6 @@ modules:
 install: all
 	mkdir -v -p "$(DESTDIR)/lib/modules/$(KVER)/kernel/drivers/gpio"
 	install $(TARGET).ko $(DESTDIR)/lib/modules/$(KVER)/kernel/drivers/gpio/
-	mkdir -v -p "$(DESTDIR)/usr/local/bin"
-	install setinterface $(DESTDIR)/usr/local/bin/
-	mkdir -v -p "$(DESTDIR)/sbin"
-	install mx_gpio_export $(DESTDIR)/sbin/
 
 clean:
 	$(MAKE) -C $(KDIR) M=$(PWD) clean

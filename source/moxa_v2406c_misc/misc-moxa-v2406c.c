@@ -26,13 +26,13 @@
 #include "gpio-it8786.c"
 #include "dio_main.h"
 
-#define DI_NUM			4
-#define DI_PATTERN		"1111"
+#define DI_NUM			6
+#define DI_PATTERN		"111111"
 #define DI_ON			1
 #define DI_OFF			0
 
-#define DO_NUM			4
-#define DO_PATTERN		"1111"
+#define DO_NUM			2
+#define DO_PATTERN		"11"
 #define DO_ON			1
 #define DO_OFF			0
 
@@ -90,8 +90,8 @@ static int di_open(struct inode *inode, struct file *file)
 }
 
 /* Write function
- * Note: use echo 1111 > /dev/di
- * The order is [di1, di2, di3, di4\n]
+ * Note: use echo 111111 > /dev/di
+ * The order is [di0, di1, di2, di3, di4, di5\n]
  */
 ssize_t di_write(struct file *filp, const char __user *buf, size_t count,
 	loff_t *pos)
@@ -209,8 +209,8 @@ static int do_release(struct inode *inode, struct file *file)
 }
 
 /* Write function
- * Note: use echo 1111 > /dev/do
- * The order is [do1, do2, do3, do4\n]
+ * Note: use echo 11 > /dev/do
+ * The order is [do0, do1\n]
  */
 ssize_t do_write(struct file *filp, const char __user *buf, size_t count,
 	loff_t *pos)
@@ -648,10 +648,8 @@ static void moxa_gpio_do_set(struct gpio_chip *gc, unsigned gpio_num, int val)
 }
 
 const char *gpio_do_names[] = {
+	"do0",
 	"do1",
-	"do2",
-	"do3",
-	"do4",
 };
 
 static struct gpio_chip moxa_gpio_do_chip = {
@@ -683,10 +681,12 @@ static void moxa_gpio_di_set(struct gpio_chip *gc, unsigned gpio_num, int val)
 }
 
 const char *gpio_di_names[] = {
+	"di0",
 	"di1",
 	"di2",
 	"di3",
 	"di4",
+	"di5",
 };
 
 static struct gpio_chip moxa_gpio_di_chip = {
