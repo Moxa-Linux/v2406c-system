@@ -4,5 +4,4 @@ base-system/v2406c_platform_init /sbin
 base-system/setinterface /sbin
 base-system/kversion /sbin
 base-system/blacklist.conf /etc/modprobe.d
-base-system/grub /etc/default/
 base-system/v2406c_sensors.conf /etc/sensors.d/
