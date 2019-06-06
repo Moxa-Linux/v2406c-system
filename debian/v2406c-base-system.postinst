@@ -50,8 +50,14 @@ case "$1" in
 		sed -i '$ a it8786_wdt' /etc/modules
 	fi
 
-	# update grub for disable network interface rename
-	update-grub
+	grep -q "it87" /etc/modules
+	if [ "$?" != "0" ]; then
+		sed -i '$ a it8786_wdt' /etc/modules
+	fi
+
+        # fix failed to set xfermode (err_mask=0x40) error
+        sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet libata.force=noncq"/g' /etc/default/grub
+        update-grub
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)
