@@ -1,3 +1,11 @@
+v2406c-system (1.0.2+deb9) stretch; urgency=low
+
+  * feat: add lm-sensors config files
+  * fix: update DIO index due to HW change
+  * feat: add DIP switch detect to misc driver 
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Mon, 10 Jun 2019 14:48:29 +0800
+
 v2406c-system (1.0.1+deb9) stretch; urgency=low
 
   * fix: remove uart ioctl function in misc driver
