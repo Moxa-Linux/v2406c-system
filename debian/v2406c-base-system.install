@@ -6,3 +6,7 @@ base-system/setinterface /sbin
 base-system/kversion /sbin
 base-system/blacklist.conf /etc/modprobe.d
 base-system/v2406c_sensors.conf /etc/sensors.d/
+base-system/common-auth /etc/pam.d
+base-system/common-password /etc/pam.d
+base-system/sshd_config /etc/ssh
+base-system/moxa.sh /etc/profile.d
