@@ -1,3 +1,11 @@
+v2406c-system (1.0.3+deb9) stretch; urgency=low
+
+  * feat: add security default settings
+  * fix: update lm-sensors settings
+  * feat: add udev rules to install file
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Wed, 19 Jun 2019 20:17:41 +0800
+
 v2406c-system (1.0.2+deb9) stretch; urgency=low
 
   * feat: add lm-sensors config files
