@@ -9,7 +9,6 @@ Homepage: https://www.moxa.com/
 Package: v2406c-base-system
 Architecture: any
 Depends: ${misc:Depends},
-         ${shlibs:Depends},
          lm-sensors,
          v2406c-modules (= ${binary:Version}),
          v2406c-moxa-firmware (= ${binary:Version})
