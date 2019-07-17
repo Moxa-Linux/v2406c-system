@@ -1,3 +1,14 @@
+v2406c-system (1.0.4+deb9) stretch; urgency=low
+
+  * fix: upgrade kernel modules to 4.9.0-9-amd64
+  * fix: remove persistent-net.rules due to wifi_mgmt isn't default installed
+  * fix: update 10-serial.rules due to symlink issue
+  * feat: add HDD hotswap driver to modules
+  * fix: fix adding modules list method at base-system postinst
+  * fix: update kversion get product name from dmi table type 2
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Mon, 15 Jul 2019 14:17:08 +0800
+
 v2406c-system (1.0.3+deb9) stretch; urgency=low
 
   * feat: add security default settings
