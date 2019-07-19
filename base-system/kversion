@@ -14,7 +14,7 @@ fi
 
 case "${1}" in
 	-a|--all)
-		echo "$PRODUCT_NAME firmware version `cat /etc/.moxaversion` build `cat /etc/.moxabuildtime`"
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
 		;;
 	-s|--serial)
 		echo "$PCBA_SERIAL"
@@ -22,8 +22,12 @@ case "${1}" in
 	-t|--type)
 		echo "$PCBA_TYPE"
 		;;
-	-v|--version)
-		echo "$PCBA_SERIAL"
+	-p|--pcba)
+		echo "$PCBA_VERSION"
+		;;
+	-v|--verbose)
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
+		echo "PCBA version $PCBA_VERSION Serial $PCBA_SERIAL Type $PCBA_TYPE"
 		;;
 	-h|--help)
 		echo -e "Usage:"
@@ -32,10 +36,11 @@ case "${1}" in
 		echo -e "	-a, --all		show firmware version and build date"
 		echo -e "	-s, --serial		show PCBA serial number"
 		echo -e "	-t, --type		show PCBA type number(00-CPU Board, 01-Carrier Board, 02-Riser card)"
-		echo -e "	-v, --version		show PCBA version"
+		echo -e "	-p, --pcba		show PCBA version"
+		echo -e "	-v, --verbose		verbose mode. show the model name, PCBA version, PCBA serial number, PCBA type, firmware version and build date"
 		echo -e "	-h, --help		show this help page"
 		;;
 	*)
-		echo "$PRODUCT_NAME"
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion`"
 		;;
 esac
