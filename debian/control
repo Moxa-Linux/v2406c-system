@@ -18,6 +18,7 @@ Description: Moxa V-2406C base system
 Package: v2406c-modules
 Architecture: any
 Depends: ${misc:Depends},
+         linux-image-4.9.0-9-amd64 (>= 4.9.168-1)
 Description: Moxa V-2406C standard kernel modules
  The Linux kernel modules for use on V-2406C
 
