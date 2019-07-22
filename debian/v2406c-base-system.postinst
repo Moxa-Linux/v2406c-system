@@ -17,7 +17,7 @@
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-
+MOD_FILE="/etc/modules"
 case "$1" in
 	configure)
 	if ! grep -wq "i2c-dev" $MOD_FILE ;\
