@@ -3,6 +3,7 @@ base-system/10-serial.rules /etc/udev/rules.d
 base-system/v2406c_platform_init /sbin
 base-system/setinterface /sbin
 base-system/kversion /sbin
+base-system/mx-ver /sbin
 base-system/blacklist.conf /etc/modprobe.d
 base-system/v2406c_sensors.conf /etc/sensors.d/
 base-system/common-auth /etc/pam.d
