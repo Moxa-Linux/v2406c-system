@@ -1,3 +1,12 @@
+v2406c-system (1.0.5+deb9) stretch; urgency=low
+
+  * fix: add modules path to postinst
+  * fix: v2406c-modules needs to depends on linux-image-4.9.0-9-amd64
+  * fix: update kversion get product name function
+  * feat: add mx-ver to base-system
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Mon, 22 Jul 2019 14:49:33 +0800
+
 v2406c-system (1.0.4+deb9) stretch; urgency=low
 
   * fix: upgrade kernel modules to 4.9.0-9-amd64
