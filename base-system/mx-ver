@@ -36,7 +36,7 @@ case "${1}" in
 		echo -e "	-v: show the firmware version"
 		echo -e "	-b: show the build time"
 		echo -e "	-i: show the hardware info"
-		echo -e "	-h: show the hele page"
+		echo -e "	-h: show the help page"
 		;;
 	*)
 		echo "$PRODUCT_NAME version `cat /etc/.moxaversion`"
