@@ -1,3 +1,10 @@
+v2406c-system (1.0.6+deb9) stretch; urgency=low
+
+  * fix: update moxa_v2406c_misc for uart rs422 pull high RTS
+  * fix: fix typo for mx-ver
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Mon, 29 Jul 2019 16:38:17 +0800
+
 v2406c-system (1.0.5+deb9) stretch; urgency=low
 
   * fix: add modules path to postinst
