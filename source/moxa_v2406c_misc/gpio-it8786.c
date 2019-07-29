@@ -256,7 +256,7 @@ int uartif_set(unsigned num, int val)
 
 	enter_uart_mode(num, port);
 	curr_vals = read_reg(0xf0, port);
-	if ( val == RS485_2WIRE_MODE) {
+	if ( val == RS485_2WIRE_MODE || val == RS422_MODE ) {
 		curr_vals |= 0x80;
 	} else {
 		curr_vals &= ~0x80;
