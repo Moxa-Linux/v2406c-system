@@ -1,3 +1,10 @@
+v2406c-system (1.0.8+deb9) stretch; urgency=low
+
+  * fix: add -a option to mx-ver
+  * fix: fix misc driver for ioctl miniPCI and select sim
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 06 Aug 2019 17:26:19 +0800
+
 v2406c-system (1.0.7+deb9) stretch; urgency=low
 
   * fix: update mx-ver for removing -a option
