@@ -468,9 +468,9 @@ digits, like \"%s\" \n", sizeof(stack_buf), PCIEPWR_PATTERN);
 
 	for (i = 0; i < sizeof(stack_buf); i++) {
 		if (stack_buf[i] == '1') {
-			do_set(i, PCIEPWR_ON);
+			pciepwr_set(i, PCIEPWR_ON);
 		} else if (stack_buf[i] == '0') {
-			do_set(i, PCIEPWR_OFF);
+			pciepwr_set(i, PCIEPWR_OFF);
 		} else {
 			printk("Moxa miniPCIe power: error, you input is %s", stack_buf);
 			break;
@@ -488,7 +488,7 @@ ssize_t pciepwr_read(struct file *filp, char __user *buf, size_t count,
 	char stack_buf[PCIEPWR_NUM];
 
 	for (i = 0; (i < sizeof(stack_buf)) && (i < count); i++) {
-		if (!do_get(i, &ret)) {
+		if (!pciepwr_get(i, &ret)) {
 			if (ret) {
 				stack_buf[i] = '0' + PCIEPWR_ON;
 			} else {
@@ -562,9 +562,9 @@ digits, like \"%s\" \n", sizeof(stack_buf), SIM_PATTERN);
 
 	for (i = 0; i < sizeof(stack_buf); i++) {
 		if (stack_buf[i] == '1') {
-			do_set(i, SIM_A);
+			sim_sel_set(i, SIM_A);
 		} else if (stack_buf[i] == '0') {
-			do_set(i, SIM_B);
+			sim_sel_set(i, SIM_B);
 		} else {
 			printk("sim card select: error, you input is %s", stack_buf);
 			break;
@@ -582,7 +582,7 @@ ssize_t sim_sel_read(struct file *filp, char __user *buf, size_t count,
 	char stack_buf[PCIEPWR_NUM];
 
 	for (i = 0; (i < sizeof(stack_buf)) && (i < count); i++) {
-		if (!do_get(i, &ret)) {
+		if (!sim_sel_get(i, &ret)) {
 			if (ret) {
 				stack_buf[i] = '0' + SIM_A;
 			} else {
