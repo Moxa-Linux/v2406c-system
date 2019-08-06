@@ -13,14 +13,17 @@ if [ -z "$PRODUCT_NAME" ]; then
 fi
 
 case "${1}" in
+	-a)
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
+		;;
 	-m)
 		echo "$PRODUCT_NAME"
 		;;
 	-v)
-		echo "`cat /etc/.moxaversion`"
+		cat /etc/.moxaversion
 		;;
 	-b)
-		echo "`cat /etc/.moxabuildtime`"
+		cat /etc/.moxabuildtime
 		;;
 	-i)
 		echo "PCBA Version $PCBA_VERSION Serial $PCBA_SERIAL Type $PCBA_TYPE"
@@ -28,6 +31,7 @@ case "${1}" in
 	-h)
 		echo -e "Usage: mx-ver [Option]"
 		echo -e "Options:"
+		echo -e "	-a: show all information"
 		echo -e "	-m: show the model name"
 		echo -e "	-v: show the firmware version"
 		echo -e "	-b: show the build time"
