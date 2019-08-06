@@ -1,3 +1,9 @@
+v2406c-system (1.0.7+deb9) stretch; urgency=low
+
+  * fix: update mx-ver for removing -a option
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 06 Aug 2019 10:14:52 +0800
+
 v2406c-system (1.0.6+deb9) stretch; urgency=low
 
   * fix: update moxa_v2406c_misc for uart rs422 pull high RTS
