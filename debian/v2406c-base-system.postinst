@@ -22,20 +22,10 @@ case "$1" in
 	configure)
 	if ! grep -wq "i2c-dev" $MOD_FILE ;\
 		then echo "i2c-dev" >> $MOD_FILE; fi
-	if ! grep -wq "misc-moxa-v2406c" $MOD_FILE ;\
-		then echo "misc-moxa-v2406c" >> $MOD_FILE; fi
-	if ! grep -wq "hid_cp2112" $MOD_FILE ;\
-		then echo "hid_cp2112" >> $MOD_FILE; fi
 	if ! grep -wq "ltc4151" $MOD_FILE ;\
 		then echo "ltc4151" >> $MOD_FILE; fi
-	if ! grep -wq "ina2xx" $MOD_FILE ;\
-		then echo "ina2xx" >> $MOD_FILE; fi
-	if ! grep -wq "it8786_wdt" $MOD_FILE;\
-		 then echo "it8786_wdt" >> $MOD_FILE; fi
 	if ! grep -wq "it87" $MOD_FILE;\
 		 then echo "it87" >> $MOD_FILE; fi
-	if ! grep -wq "moxa_hotswap" $MOD_FILE;\
-		 then echo "moxa_hotswap" >> $MOD_FILE; fi
 
         # fix failed to set xfermode (err_mask=0x40) error
         sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet libata.force=noncq acpi_enforce_resources=lax"/g' /etc/default/grub
