@@ -1,3 +1,14 @@
+v2406c-system (1.0.9+deb9) stretch; urgency=low
+
+  * refactor: remove source directory due to be maintained by repo
+  * refactor: remove modules due to be maintained by repo
+  * feat: add S3 suspend back event to enable celluar module power
+  * fix: remove default kernel driver modules list
+  * fix: disable MDS due to MDS CPU bug present and SMT on data leak possible
+  * refactor: remove moxa.sh due to security scenario is not defined
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 20 Aug 2019 15:46:10 +0800
+
 v2406c-system (1.0.8+deb9) stretch; urgency=low
 
   * fix: add -a option to mx-ver
