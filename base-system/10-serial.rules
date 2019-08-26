@@ -1,4 +1,4 @@
-KERNEL=="ttyS[0-3]*", KERNELS=="00:05", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM0"
-KERNEL=="ttyS[0-3]*", KERNELS=="00:06", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM1"
-KERNEL=="ttyS[0-3]*", KERNELS=="00:07", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM2"
-KERNEL=="ttyS[0-3]*", KERNELS=="00:08", SUBSYSTEM=="tty", ACTION=="add", SYMLINK+="ttyM3"
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS0", SUBSYSTEM=="tty", SYMLINK+="ttyM0"
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS1", SUBSYSTEM=="tty", SYMLINK+="ttyM1"
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS2", SUBSYSTEM=="tty", SYMLINK+="ttyM2"
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS3", SUBSYSTEM=="tty", SYMLINK+="ttyM3"

@@ -9,14 +9,10 @@ Homepage: https://www.moxa.com/
 Package: v2406c-base-system
 Architecture: any
 Depends: ${misc:Depends},
+         lm-sensors,
+         v2406c-moxa-firmware (= ${binary:Version})
 Description: Moxa V-2406C base system
  It contains the necessary tools for setting up V-2406C
-
-Package: v2406c-modules
-Architecture: any
-Depends: ${misc:Depends},
-Description: Moxa V-2406C standard kernel modules
- The Linux kernel modules for use on V-2406C
 
 Package: v2406c-moxa-firmware
 Architecture: any

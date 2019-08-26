@@ -17,41 +17,19 @@
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
-
+MOD_FILE="/etc/modules"
 case "$1" in
 	configure)
-	grep -q "i2c-dev" /etc/modules
-	if [ "$?" != "0" ]; then
-		sed -i '$ a i2c-dev' /etc/modules
-	fi
+	if ! grep -wq "i2c-dev" $MOD_FILE ;\
+		then echo "i2c-dev" >> $MOD_FILE; fi
+	if ! grep -wq "ltc4151" $MOD_FILE ;\
+		then echo "ltc4151" >> $MOD_FILE; fi
+	if ! grep -wq "it87" $MOD_FILE;\
+		 then echo "it87" >> $MOD_FILE; fi
 
-	grep -q "misc-moxa-v2406c" /etc/modules
-	if [ "$?" != "0" ]; then
-		sed -i '$ a misc-moxa-v2406c' /etc/modules
-	fi
-
-	grep -q "hid_cp2112" /etc/modules
-	if [ "$?" != "0" ]; then
-		sed -i '$ a hid_cp2112' /etc/modules
-	fi
-
-	grep -q "ina2xx" /etc/modules
-	if [ "$?" != "0" ]; then
-		sed -i '$ a ina2xx' /etc/modules
-	fi
-
-	grep -q "ltc4151" /etc/modules
-	if [ "$?" != "0" ]; then
-		sed -i '$ a ltc4151' /etc/modules
-	fi
-
-	grep -q "it8786_wdt" /etc/modules
-	if [ "$?" != "0" ]; then
-		sed -i '$ a it8786_wdt' /etc/modules
-	fi
-
-	# update grub for disable network interface rename
-	update-grub
+        # fix failed to set xfermode (err_mask=0x40) error
+        sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet libata.force=noncq acpi_enforce_resources=lax mds=off"/g' /etc/default/grub
+        update-grub
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)

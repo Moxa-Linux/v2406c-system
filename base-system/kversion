@@ -1,24 +1,20 @@
 #!/bin/bash
 
 # Please ensure that the following default value has been filled
-DEFAULT_NAME="V"
-DEFAULT_FULLNAME="V-2406C"
+NO_MODEL_NAME="No_model_name"
 
-PCBA_NAME=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 11-16 | xargs`
-PCBA_NUMBER=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 17-21 | xargs`
-PCBA_SERIAL=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 22 | xargs`
-PCBA_TYPE=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 23-24 | xargs`
-PCBA_VERSION=`dmidecode -t 12 | grep ${DEFAULT_NAME} | cut -c 25-27 | xargs`
+PRODUCT_NAME=`dmidecode -t 2 | grep "Product Name:" | awk '{print $3}'`
+PCBA_SERIAL=`dmidecode -t 12 | grep "Option 2:" | cut -c 22 | xargs`
+PCBA_TYPE=`dmidecode -t 12 | grep "Option 2:" | cut -c 23-24 | xargs`
+PCBA_VERSION=`dmidecode -t 12 | grep "Option 2:" | cut -c 25-27 | xargs`
 
-if [ -z "$PCBA_NAME" ] || [ -z "$PCBA_NUMBER" ]; then
-	PRODUCT_NAME=$DEFAULT_FULLNAME
-else
-	PRODUCT_NAME="${PCBA_NAME}-${PCBA_NUMBER}"
+if [ -z "$PRODUCT_NAME" ]; then
+	PRODUCT_NAME=$NO_MODEL_NAME
 fi
 
 case "${1}" in
 	-a|--all)
-		echo "$PRODUCT_NAME firmware version `cat /etc/.moxaversion` build `cat /etc/.moxabuildtime`"
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
 		;;
 	-s|--serial)
 		echo "$PCBA_SERIAL"
@@ -26,8 +22,12 @@ case "${1}" in
 	-t|--type)
 		echo "$PCBA_TYPE"
 		;;
-	-v|--version)
-		echo "$PCBA_SERIAL"
+	-p|--pcba)
+		echo "$PCBA_VERSION"
+		;;
+	-v|--verbose)
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
+		echo "PCBA version $PCBA_VERSION Serial $PCBA_SERIAL Type $PCBA_TYPE"
 		;;
 	-h|--help)
 		echo -e "Usage:"
@@ -36,10 +36,11 @@ case "${1}" in
 		echo -e "	-a, --all		show firmware version and build date"
 		echo -e "	-s, --serial		show PCBA serial number"
 		echo -e "	-t, --type		show PCBA type number(00-CPU Board, 01-Carrier Board, 02-Riser card)"
-		echo -e "	-v, --version		show PCBA version"
+		echo -e "	-p, --pcba		show PCBA version"
+		echo -e "	-v, --verbose		verbose mode. show the model name, PCBA version, PCBA serial number, PCBA type, firmware version and build date"
 		echo -e "	-h, --help		show this help page"
 		;;
 	*)
-		echo "$PRODUCT_NAME"
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion`"
 		;;
 esac

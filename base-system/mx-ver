@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Please ensure that the following default value has been filled
+NO_MODEL_NAME="No_model_name"
+
+PRODUCT_NAME=`dmidecode -t 2 | grep "Product Name:" | awk '{print $3}'`
+PCBA_SERIAL=`dmidecode -t 12 | grep "Option 2:" | cut -c 22 | xargs`
+PCBA_TYPE=`dmidecode -t 12 | grep "Option 2:" | cut -c 23-24 | xargs`
+PCBA_VERSION=`dmidecode -t 12 | grep "Option 2:" | cut -c 25-27 | xargs`
+
+if [ -z "$PRODUCT_NAME" ]; then
+	PRODUCT_NAME=$NO_MODEL_NAME
+fi
+
+case "${1}" in
+	-a)
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
+		;;
+	-m)
+		echo "$PRODUCT_NAME"
+		;;
+	-v)
+		cat /etc/.moxaversion
+		;;
+	-b)
+		cat /etc/.moxabuildtime
+		;;
+	-i)
+		echo "PCBA Version $PCBA_VERSION Serial $PCBA_SERIAL Type $PCBA_TYPE"
+		;;
+	-h)
+		echo -e "Usage: mx-ver [Option]"
+		echo -e "Options:"
+		echo -e "	-a: show all information"
+		echo -e "	-m: show the model name"
+		echo -e "	-v: show the firmware version"
+		echo -e "	-b: show the build time"
+		echo -e "	-i: show the hardware info"
+		echo -e "	-h: show the help page"
+		;;
+	*)
+		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
+		;;
+esac
