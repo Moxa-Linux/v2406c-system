@@ -26,6 +26,8 @@ case "$1" in
 		then echo "ltc4151" >> $MOD_FILE; fi
 	if ! grep -wq "it87" $MOD_FILE;\
 		 then echo "it87" >> $MOD_FILE; fi
+	if ! grep -wq "hid_cp2112" $MOD_FILE;\
+		 then echo "hid_cp2112" >> $MOD_FILE; fi
 
         # fix failed to set xfermode (err_mask=0x40) error
         sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet libata.force=noncq acpi_enforce_resources=lax mds=off"/g' /etc/default/grub
