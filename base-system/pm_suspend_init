@@ -12,4 +12,10 @@ power_on_cellular_module() {
 	done
 }
 
+# restart hotswapd daemon due to LED is off
+restart_hotswapd() {
+	systemctl restart mx_hotswapd
+}
+
 power_on_cellular_module
+restart_hotswapd

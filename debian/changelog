@@ -1,3 +1,11 @@
+v2406c-system (1.0.10+deb9) stretch; urgency=low
+
+  * fix: add cp2112 to postinst due to this driver is default installed
+  * fix: rename ath10k firmware name due to pci path was changed
+  * fix: add S3 suspend to restart mx_hotswapd
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 03 Sep 2019 17:57:04 +0800
+
 v2406c-system (1.0.9+deb9) stretch; urgency=low
 
   * refactor: remove source directory due to be maintained by repo
