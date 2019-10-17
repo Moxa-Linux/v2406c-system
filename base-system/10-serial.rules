@@ -1,0 +1,4 @@
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS0", SUBSYSTEM=="tty", SYMLINK+="ttyM0"
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS1", SUBSYSTEM=="tty", SYMLINK+="ttyM1"
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS2", SUBSYSTEM=="tty", SYMLINK+="ttyM2"
+KERNEL=="ttyS[0-3]*", KERNELS=="ttyS3", SUBSYSTEM=="tty", SYMLINK+="ttyM3"

@@ -1,0 +1,100 @@
+#!/bin/bash
+#
+#    Copyright (C) MOXA Inc. All rights reserved.
+#
+#    This software is distributed under the terms of the
+#    MOXA License.  See the file COPYING-MOXA for details.
+#
+#    /sbin/setinterface
+#
+#    Moxa set interface utility for V-2406C model
+#
+#    2018-10-29  Elvis CW Yao
+#	 new release based on orginal setinterface
+#
+
+RS232_MODE=0
+RS485_MODE=1
+RS422_MODE=2
+
+RS232_MODE_STR="Now setting is RS232 mode"
+RS485_MODE_STR="Now setting is RS485-2W mode"
+RS422_MODE_STR="Now setting is RS422/RS485-4W mode"
+
+check_root_user() {
+	if [ x"$(whoami)" != x"root" ]; then
+		echo "Permission denied."
+		exit -3
+	fi
+}
+
+usage() {
+	echo -ne "Usage: /usr/bin/setinterface device-node [interface-no]\n"
+	echo -ne "\tdevice-node     - /dev/ttyMn, n = [0:${MAX_GPIO_PORT_NUM}]\n"
+	echo -ne "\tinterface-no    - following:\n"
+	echo -ne "\tnone - to view now setting\n"
+	echo -ne "\t0 - set to RS232 interface\n"
+	echo -ne "\t1 - set to RS485-2W interface\n"
+	echo -ne "\t2 - set to RS422/RS485-4W interface\n"
+	echo -ne "\n"
+	exit 0
+}
+
+io_board_uart_mode() {
+	port=$1
+	mode=$2
+
+	if [ -z "$mode" ]; then
+		# get mode
+		if [ x"1" == x"$(cat /sys/class/gpio/uart${port}_232/value)" ]; then
+			echo $RS232_MODE_STR
+		elif [ x"1" == x"$(cat /sys/class/gpio/uart${port}_485/value)" ]; then
+			echo $RS485_MODE_STR
+		elif [ x"1" == x"$(cat /sys/class/gpio/uart${port}_422/value)" ]; then
+			echo $RS422_MODE_STR
+		fi
+		exit 0
+
+	# set mode
+	elif [ x"$mode" == x"$RS232_MODE" ]; then
+		echo 1 > /sys/class/gpio/uart${port}_232/value 2>/dev/null
+	elif [ x"$mode" == x"$RS485_MODE" ]; then
+		echo 1 > /sys/class/gpio/uart${port}_485/value 2>/dev/null
+	elif [ x"$mode" == x"$RS422_MODE" ]; then
+		echo 1 > /sys/class/gpio/uart${port}_422/value 2>/dev/null
+	else
+		echo "Cannot recognize the mode. Exit."
+		exit -1
+	fi
+
+	io_board_uart_mode $port
+}
+
+main() {
+	if [ x"$1" == x"-h" ]; then
+		usage
+	fi
+
+	check_root_user
+
+	port=${1##*/dev/ttyM}
+	mode=$2
+
+	if [ ! -e $1 ]; then
+		echo "Target device node $1 is not existed. Exit."
+		exit -1
+	fi
+
+	io_board_uart_mode $(($port+1)) $mode
+}
+
+MAX_GPIO_PORT_NUM=$(ls /dev/ttyM* | wc -l)
+MAX_GPIO_PORT_NUM=$(($MAX_GPIO_PORT_NUM-1))
+
+#check number of input parameters are valid
+if [ $# -eq 0 ] || [ $# -gt 2 ]; then
+	usage
+	exit -1
+fi
+
+main $1 $2
