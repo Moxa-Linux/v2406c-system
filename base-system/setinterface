@@ -7,24 +7,22 @@
 #
 #    /sbin/setinterface
 #
-#    Moxa set interface utility for V-2406C model
-#
-#    2018-10-29  Elvis CW Yao
-#	 new release based on orginal setinterface
+#    Moxa set interface utility for V-2406C model forwards compatible
 #
 
-RS232_MODE=0
-RS485_MODE=1
-RS422_MODE=2
-
-RS232_MODE_STR="Now setting is RS232 mode"
-RS485_MODE_STR="Now setting is RS485-2W mode"
-RS422_MODE_STR="Now setting is RS422/RS485-4W mode"
+UART_CTL_PRG="/sbin/mx-uart-ctl"
 
 check_root_user() {
-	if [ x"$(whoami)" != x"root" ]; then
+	if [ "$(whoami)" != "root" ]; then
 		echo "Permission denied."
-		exit -3
+		exit 1
+	fi
+}
+
+check_moxa_uart_ctl() {
+	if [ ! -f "$UART_CTL_PRG" ]; then
+		echo "$UART_CTL_PRG is not existed. Exit."
+		exit 1
 	fi
 }
 
@@ -40,52 +38,27 @@ usage() {
 	exit 0
 }
 
-io_board_uart_mode() {
-	port=$1
-	mode=$2
-
-	if [ -z "$mode" ]; then
-		# get mode
-		if [ x"1" == x"$(cat /sys/class/gpio/uart${port}_232/value)" ]; then
-			echo $RS232_MODE_STR
-		elif [ x"1" == x"$(cat /sys/class/gpio/uart${port}_485/value)" ]; then
-			echo $RS485_MODE_STR
-		elif [ x"1" == x"$(cat /sys/class/gpio/uart${port}_422/value)" ]; then
-			echo $RS422_MODE_STR
-		fi
-		exit 0
-
-	# set mode
-	elif [ x"$mode" == x"$RS232_MODE" ]; then
-		echo 1 > /sys/class/gpio/uart${port}_232/value 2>/dev/null
-	elif [ x"$mode" == x"$RS485_MODE" ]; then
-		echo 1 > /sys/class/gpio/uart${port}_485/value 2>/dev/null
-	elif [ x"$mode" == x"$RS422_MODE" ]; then
-		echo 1 > /sys/class/gpio/uart${port}_422/value 2>/dev/null
-	else
-		echo "Cannot recognize the mode. Exit."
-		exit -1
-	fi
-
-	io_board_uart_mode $port
-}
-
 main() {
-	if [ x"$1" == x"-h" ]; then
+	if [ "$1" == "-h" ]; then
 		usage
 	fi
 
 	check_root_user
+	check_moxa_uart_ctl
 
 	port=${1##*/dev/ttyM}
 	mode=$2
 
 	if [ ! -e $1 ]; then
 		echo "Target device node $1 is not existed. Exit."
-		exit -1
+		exit 1
 	fi
 
-	io_board_uart_mode $(($port+1)) $mode
+	if [ -z "$mode" ]; then
+		$UART_CTL_PRG -p $port
+	else
+		$UART_CTL_PRG -p $port -m $mode
+	fi
 }
 
 MAX_GPIO_PORT_NUM=$(ls /dev/ttyM* | wc -l)
