@@ -4,10 +4,6 @@
 Base system for V-2406C.
 It contains the necessary tools for setting up V-2406C
 
-## modules
-V-2406C standard kernel modules.
-The Linux kernel modules for use on V-2406C
-
 ## firmware
 V-2406C platform firmware files.
 The Linux firmare files for use on V-2406C
@@ -23,6 +19,6 @@ The Linux firmare files for use on V-2406C
 1. copy from debian pakcage firmware-misc-nonfree (20190114-1~bpo9+2) non-free under stretch-backports
 2. copy `i915/kbl_dmc_ver1_01.bin` to `/lib/firmware/i915`
 
-## source
-V-2406C platform driver source files.
-including watchdog, misc drivers
+## moxa-configs
+The platform-related configuration items are recoreded in this file,
+these items will be referred to other platform packages.
