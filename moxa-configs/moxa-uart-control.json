@@ -1,0 +1,50 @@
+{
+    "CONFIG_VERSION": "1.1.5",
+    "METHOD": "FILEPATH",
+    "NUM_OF_UART_PORTS": 4,
+    "UART_PORTS": [
+            "/dev/ttyM0",
+            "/dev/ttyM1",
+            "/dev/ttyM2",
+            "/dev/ttyM3"
+    ],
+    "UART_PORTS_GROUP": [
+            "1",
+            "1",
+            "1",
+            "1"
+    ],
+    "FILEPATH_PER_UART_PORT": 4,
+    "FILEPATH_OF_UART_PORTS": [
+        [
+            "/sys/class/gpio/gpio444/value",
+            "/sys/class/gpio/gpio441/value",
+            "/sys/class/gpio/gpio442/value",
+            "/sys/class/misc/it87_serial/serial1/serial1_rs485"
+        ],
+        [
+            "/sys/class/gpio/gpio456/value",
+            "/sys/class/gpio/gpio445/value",
+            "/sys/class/gpio/gpio446/value",
+            "/sys/class/misc/it87_serial/serial2/serial2_rs485"
+        ],
+        [
+            "/sys/class/gpio/gpio462/value",
+            "/sys/class/gpio/gpio458/value",
+            "/sys/class/gpio/gpio459/value",
+            "/sys/class/misc/it87_serial/serial3/serial3_rs485"
+        ],
+        [
+            "/sys/class/gpio/gpio472/value",
+            "/sys/class/gpio/gpio463/value",
+            "/sys/class/gpio/gpio471/value",
+            "/sys/class/misc/it87_serial/serial4/serial4_rs485"
+        ]
+    ],
+    "NUM_OF_UART_MODE": 3,
+    "UART_MODES_GROUP1": [
+            [1, 0, 0, 0],
+            [0, 1, 0, 1],
+            [0, 0, 1, 1]
+    ]
+}
