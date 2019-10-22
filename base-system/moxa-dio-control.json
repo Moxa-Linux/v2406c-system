@@ -1,9 +1,0 @@
-{
-	"CONFIG_VERSION": "1.1.0",
-	"METHOD": "IOCTL",
-	"DIN_NODE": "/dev/di",
-	"DOUT_NODE": "/dev/do",
-	"NUM_OF_DIN_PORTS": 4,
-	"NUM_OF_DOUT_PORTS": 4,
-	"DIN_PORT_POLLING_INTERVAL": 100
-}
