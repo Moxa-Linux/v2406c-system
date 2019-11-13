@@ -1,15 +1,16 @@
 #!/bin/bash
 
-# HIGH means miniPCIe for cellular, LOW means for wifi
+# HIGH means miniPCIe for cellular, LOW means for wifi do nothing
 power_on_cellular_module() {
-	for filename in /sys/class/gpio/dip_sel_*/value; do
-		value=$(cat ${filename})
-		if [[ $value == 1 ]]; then
-			devpath=$(echo ${filename%/*})
-			index=$(echo ${devpath##*dip_sel_})
-                        echo 1 > /sys/class/gpio/pciepwr_${index}/value
-		fi
-	done
+	# check dip slots and power on celluar
+	if [[ $(cat /sys/class/gpio/gpio455/value) == 1 ]]; then
+		mx-module-ctl -s 1 -p on
+	fi
+	
+	# check dip slots and power on celluar
+	if [[ $(cat /sys/class/gpio/gpio487/value) == 1 ]]; then
+		mx-module-ctl -s 2 -p on
+	fi
 }
 
 # restart hotswapd daemon due to LED is off
