@@ -1,3 +1,19 @@
+v2406c-system (1.1.0) stretch; urgency=low
+
+  * refactor: remove firmware files and update README.md
+  * refactor: remove motd in base-system
+  * refactor: modify pm_suspend_init to adapt it87 gpio driver
+  * refactor: modify setinterface to forwards compatible for moxa-uart-control
+  * refactor: mx-ver is replaced by moxa-version package
+  * docs: update README.md for package refactor
+  * refactor: update v2406c_platform_init to it87 gpio driver
+  * feat: support moxa-module-control
+  * feat: support moxa-uart-control
+  * feat: support moxa-dio-control
+  * feat: support to update moxa-version.conf file when DIFB building image
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Wed, 13 Nov 2019 14:02:18 +0800
+
 v2406c-system (1.0.10+deb9) stretch; urgency=low
 
   * fix: add cp2112 to postinst due to this driver is default installed
