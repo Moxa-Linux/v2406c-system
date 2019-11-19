@@ -1,30 +1,29 @@
-#! /bin/bash
+#!/bin/bash
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Authors:
+#	2019	Elvis Yao <ElvisCW.Yao@moxa.com>
+#
+# Description:
+#	For Moxa V-2406C series
+#
 
-export_gpio() {
-	local TARGET_GPIOCHIP=$1
-	local GPIOCHIP_NAME=gpiochip
-	local GPIO_FS_PATH=/sys/class/gpio
-	local GPIO_EXPORT="export"
-
-	if [ x"$2" == x"unexport" ]; then
-		GPIO_EXPORT="unexport"
+init_gpio () {
+	local gpio=${1}
+	local direction=${2}
+	local value=${3}
+	if [ ! -e "/sys/class/gpio/gpio${gpio}" ]; then
+		echo ${gpio} > "/sys/class/gpio/export"
 	fi
 
-	#
-	# Export GPIOs
-	#
-	ls $GPIO_FS_PATH | grep $GPIOCHIP_NAME | while read -r chip ; do
-		GPIO_LABEL=$(cat $GPIO_FS_PATH/$chip/label)
-		if [[ "$GPIO_LABEL" != *"$TARGET_GPIOCHIP"* ]]; then
-			continue
+	if [ "${direction}" == "out" ]; then
+                echo ${direction} > "/sys/class/gpio/gpio${gpio}/direction"
+                [ ! -z "${active_low}" ] && \
+                        echo ${active_low} > "/sys/class/gpio/gpio${gpio}/active_low"
+                [ ! -z "${value}" ] && \
+                        echo ${value} > "/sys/class/gpio/gpio${gpio}/value"
 	fi
-
-		pinstart=$(echo $chip | sed s/$GPIOCHIP_NAME/\\n/g)
-		count=$(cat $GPIO_FS_PATH/$chip/ngpio)
-		for (( i=0; i<${count}; i++ )); do
-			echo $((${pinstart}+${i})) > $GPIO_FS_PATH/$GPIO_EXPORT 2>/dev/null
-		done
-	done
 }
 
 bind_hwm_driver() {
@@ -62,29 +61,82 @@ unbind_hwm_driver() {
 	done
 }
 
-# HIGH means miniPCIe for cellular, LOW means for wifi
+# HIGH means miniPCIe for cellular, LOW means for wifi do nothing
 power_on_cellular_module() {
-	for filename in /sys/class/gpio/dip_sel_*/value; do
-		value=$(cat ${filename})
-		if [[ $value == 1 ]]; then
-			devpath=$(echo ${filename%/*})
-			index=$(echo ${devpath##*dip_sel_})
-			# TODO: maybe need power seq for specific power module
-			echo 1 > /sys/class/gpio/pciepwr_${index}/value
-		fi
-	done
+	# check DIP slots is LTE mode and power on it
+	if [[ $(cat /sys/class/gpio/gpio455/value) == 1 ]]; then
+		mx-module-ctl -s 1 -p on
+	fi
+
+	# check dip slots and power on celluar
+	if [[ $(cat /sys/class/gpio/gpio487/value) == 1 ]]; then
+		mx-module-ctl -s 2 -p on
+	fi
+}
+
+initial_it87_uart() {
+	# Port 1
+	init_gpio "444" "out" "1"
+	init_gpio "441" "out" "0"
+	init_gpio "442" "out" "0"
+
+	# Port 2
+	init_gpio "456" "out" "1"
+	init_gpio "445" "out" "0"
+	init_gpio "446" "out" "0"
+
+	# Port 3
+	init_gpio "462" "out" "1"
+	init_gpio "458" "out" "0"
+	init_gpio "459" "out" "0"
+
+	# Port 4
+	init_gpio "472" "out" "1"
+	init_gpio "463" "out" "0"
+	init_gpio "471" "out" "0"
+}
+
+initial_cellular() {
+	# initial cellular PWR pins
+	init_gpio "497" "out" "0"
+	init_gpio "499" "out" "0"
+
+	# set first sim card slot by default
+	init_gpio "496" "out" "0"
+	init_gpio "498" "out" "0"
+}
+
+initial_dio() {
+	# setup DIO output pins (DO0~DO1)
+	init_gpio "494" "out" "0"
+	init_gpio "495" "out" "0"
+
+	# export DIO input pins (DI0~DI5)
+	init_gpio "488"
+	init_gpio "489"
+	init_gpio "490"
+	init_gpio "491"
+	init_gpio "492"
+	init_gpio "493"
+}
+
+initial_dip_switch() {
+	# export dip switch gpio pins
+	init_gpio "455"
+	init_gpio "487"
 }
 
 case "$1" in
 	start)
 		bind_hwm_driver
-		export_gpio "moxa-gpio"
-
-		sleep 1
+		initial_it87_uart
+		initial_dio
+		initial_cellular
+		initial_dip_switch
 		power_on_cellular_module
+		systemctl restart moxa-module-control.service
 	;;
 	stop)
-		export_gpio "moxa-gpio" unexport
 		unbind_hwm_driver
 	;;
 	*)

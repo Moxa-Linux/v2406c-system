@@ -1,0 +1,281 @@
+#!/bin/bash -e
+
+# SPDX-License-Identifier: Apache-2.0
+#
+# Name:
+#	MOXA Audio Jack Re-tasking Utility for Intel HDA Driver
+#
+# Description:
+#	Utility for re-tasking HDA audio jack mode.
+#	Utility source is based on moxa-module-control.
+#
+# Copyright (C) Moxa, Inc. All rights reserved.
+# Copyright (C) 2018-2019	Elvis Yao	<ElvisCW.Yao@moxa.com>
+#
+
+VERSION=1.0.0
+CONFIG_FILE=/etc/moxa-configs/moxa-audio-retask.conf
+AUDIO_FW_FILE=/lib/firmware/mx-audio-retask.fw
+AUDIO_LIB_FILE=/etc/modprobe.d/mx-audio-retask.conf
+
+# Retasking mode
+LINE_OUT_MODE=1
+SPEAKER_MODE=2
+HEADPHONE_MODE=3
+LINE_IN_MODE=4
+MICROPHONE_MODE=5
+
+#
+# Functions
+#
+usage() {
+	echo -e "Usage:"
+	echo -e "	mx-audio-retask [Options]"
+	echo -e ""
+	echo -e "Operations:"
+	echo -e "	-v,--version"
+	echo -e "		Show utility version"
+	echo -e "	-p,--port <port_index>"
+	echo -e "		Select Jack Index (1, 2, ...)"
+	echo -e "	-m,--mode <mode_index>"
+	echo -e "		Select Jack Mode Index (1 to 5)"
+	echo -e ""
+	echo -e "Mode List:"
+	echo -e "	LINE_OUT=1"
+	echo -e "	SPEAKER=2"
+	echo -e "	HEADPHONE=3"
+	echo -e "	LINE_IN=4"
+	echo -e "	MICROPHONE=5"
+	echo -e ""
+	echo -e "Example:"
+	echo -e "	Get audio jack 1 mode"
+	echo -e "	# mx-audio-retask -p 1"
+	echo -e "	Switch audio jack 2 to HEADPHONE mode"
+	echo -e "	# mx-audio-retask -p 2 -m 3"
+}
+
+_is_number() {
+	local input=${1}
+	local num_regex='^[0-9]+$'
+
+	if [ -z "${input}" ]; then
+		return 1
+	fi
+
+	if ! [[ ${input} =~ ${num_regex} ]]; then
+		return 1
+	fi
+	return 0
+}
+
+_is_port_valid() {
+	local port=${1}
+
+	if ! _is_number "${port}"; then
+		return 1
+	fi
+
+	if [ ${port} -le 0 ] || [ ${port} -gt ${NUM_OF_JACK_PORTS} ]; then
+		return 1
+	fi
+	return 0
+}
+
+load_config() {
+	if [ ! -f "${CONFIG_FILE}" ]; then
+		echo "Error: config file \`${CONFIG_FILE}\` not found." >&2
+		return 1
+	fi
+	source "${CONFIG_FILE}"
+
+	if [ -z "${NUM_OF_JACK_PORTS}" ] || ! _is_number "${NUM_OF_JACK_PORTS}"; then
+		echo "Error: Can not load number of audio jack ports." >&2
+		return 1
+	fi
+}
+
+write_hda_lib_conf() {
+	cat << EOF > $AUDIO_LIB_FILE
+# This file was added by the program 'mx-audio-retask'.
+# If you want to revert the changes made by this program, you can simply erase this file and reboot your computer.
+options snd-hda-intel patch=mx-audio-retask.fw,mx-audio-retask.fw,mx-audio-retask.fw,mx-audio-retask.fw
+EOF
+}
+
+write_hda_fw_file() {
+	local port=${1}
+	local pincfg=${2}
+	local pin_id
+	local pin_index
+
+	if [ -z "${pincfg}" ] || ! _is_port_valid "${port}"; then
+		echo "Error: Can not load number of audio jack ports." >&2
+		return 1
+	fi
+	if [ -z "${CODEC}" ]; then
+		echo "Error: Unknown codec value" >&2
+		echo "Please check \`CODEC\` in config file $CONFIG_FILE." >&2
+		return 1
+	fi
+	if [ -z "${JACKS_PIN_ID}" ]; then
+		echo "Error: Unknown jack pin id" >&2
+		echo "Please check \`JACKS_PIN_ID\` in config file $CONFIG_FILE." >&2
+		return 1
+	fi
+
+	# check fw file is existed or not
+	if [ ! -f "${AUDIO_FW_FILE}" ]; then
+		cat << EOF > $AUDIO_FW_FILE
+[codec]
+$CODEC
+
+[pincfg]
+EOF
+	fi
+
+	pin_index=$((port-1))
+	pin_id=${JACKS_PIN_ID[$pin_index]}
+
+	if [ -z "${pin_id}" ] || ! _is_number "${port}"; then
+		echo "Error: Unknown jack pin id at port $port" >&2
+		echo "Please check \`port\` value and \`JACKS_PIN_ID\` in config file $CONFIG_FILE." >&2
+		return 1
+	fi
+
+	if ! grep -wq "$pin_id" $AUDIO_FW_FILE; then
+		echo "$pin_id $pincfg" >> $AUDIO_FW_FILE;
+	else
+		sed -i "/$pin_id /c\\$pin_id $pincfg" $AUDIO_FW_FILE
+	fi
+
+	echo "Write audio fw file is succeeded."
+	echo "Please reboot to finish audio retask setup."
+}
+
+get_port_mode() {
+	local port=${1}
+	local pin_index
+	local pin_id
+
+	if ! [ -x "$(command -v hdajacksensetest)" ]; then
+		echo "Error: hdajacksensetest is not installed." >&2
+		echo "Please exec 'sudo apt-get install alsa-tools'"
+		exit 1
+	fi
+
+	pin_index=$((port-1))
+	pin_id=${JACKS_PIN_ID[$pin_index]}
+	if [ -z "${pin_id}" ] || ! _is_number "${port}"; then
+		echo "Error: Unknown jack pin id at port $port" >&2
+		echo "Please check \`port\` value and \`JACKS_PIN_ID\` in config file $CONFIG_FILE." >&2
+		return 1
+	fi
+
+	# exec hdajacksensetest for getting current port configuration
+	/usr/bin/hdajacksensetest -a | grep $pin_id
+}
+
+do_action() {
+	local action=${1}
+	local port=${2}
+	local act_arg=${3}
+
+	# Actions that doesn't need slot ID
+	if [ "${action}" == "NONE" ]; then
+		echo "Moxa Intel HDA Audio Jack Re-tasking utility"
+		echo "Version: ${VERSION}"
+		echo "---------------------------"
+		usage
+		return 0
+	fi
+
+	# Check if jack ID is valid
+	if [ ${NUM_OF_JACK_PORTS} -eq 0 ]; then
+		echo "No audio jacks on this device." >&2
+		return 1
+	fi
+	if ! _is_port_valid "${port}"; then
+		echo "Error: Invalid port index: ${port}" >&2
+		return 1
+	fi
+
+	# Actions that need jack ID
+	if  [ "${action}" == "GET_MODE" ]; then
+		get_port_mode $port
+	elif [ "${action}" == "SWITCH_MODE" ]; then
+		local pin_conf
+
+		if [ "${act_arg}" == "$LINE_OUT_MODE" ]; then
+			pin_conf=$LINE_OUT
+		elif [ "${act_arg}" == "$SPEAKER_MODE" ]; then
+			pin_conf=$SPEAKER
+		elif [ "${act_arg}" == "$HEADPHONE_MODE" ]; then
+			pin_conf=$HEADPHONE
+		elif [ "${act_arg}" == "$LINE_IN_MODE" ]; then
+			pin_conf=$LINE_IN
+		elif [ "${act_arg}" == "$MICROPHONE_MODE" ]; then
+			pin_conf=$MICROPHONE
+		else
+			echo "Error: Unknown mode: ${act_arg}" >&2
+			return 1
+		fi
+
+		# Generate snd-hda-intel driver config
+		if [ ! -f "${AUDIO_LIB_FILE}" ]; then
+			write_hda_lib_conf
+		fi
+
+		# Generate snd-hda-intel firmware file
+		write_hda_fw_file $port $pin_conf
+	else
+		echo "Error: Unknown action: ${action}" >&2
+		echo "Please run \`mx-audio-retask -h\` for help." >&2
+		return 1
+	fi
+}
+
+main() {
+	local action="GET_MODE"
+	local port=1
+	local act_arg
+
+	if [ $# -lt 2 ]; then usage; exit 0; fi
+
+	while true; do
+		case "${1}" in
+		"-v"|"--version")
+			echo "Version: ${VERSION}"
+			return 0
+			;;
+		"-h"|"--help")
+			usage
+			return 0
+			;;
+		"-p"|"--port")
+			port=${2}
+			[ -z "${port}" ] && exit 1
+			shift 2
+			;;
+		"-m"|"--mode")
+			action="SWITCH_MODE"
+			act_arg=${2}
+			[ -z "${act_arg}" ] && exit 1
+			shift 2
+			;;
+		"")
+			break
+			;;
+		*)
+			echo "Error: Unknown option: ${1}" >&2
+			echo "Please run \`mx-audio-retask -h\` for help." >&2
+			return 1
+			;;
+		esac
+	done
+
+	load_config
+	do_action "${action}" "${port}" "${act_arg}"
+}
+
+main "$@"
+exit 0
