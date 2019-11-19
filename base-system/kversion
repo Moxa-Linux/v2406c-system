@@ -1,46 +1,44 @@
-#!/bin/bash
+#!/bin/bash -e
 
-# Please ensure that the following default value has been filled
-NO_MODEL_NAME="No_model_name"
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Name:
+#	MOXA kversion utility
+#
+# Description:
+#	The utility of getting Moxa device's information has been 
+#	renamed to "mx-ver".
+#	This script is for compatible to old kversion utility.
+#
+# Authors:
+#	2019	Ken CJ Chou	<KenCJ.Chou@moxa.com>
+#
 
-PRODUCT_NAME=`dmidecode -t 2 | grep "Product Name:" | awk '{print $3}'`
-PCBA_SERIAL=`dmidecode -t 12 | grep "Option 2:" | cut -c 22 | xargs`
-PCBA_TYPE=`dmidecode -t 12 | grep "Option 2:" | cut -c 23-24 | xargs`
-PCBA_VERSION=`dmidecode -t 12 | grep "Option 2:" | cut -c 25-27 | xargs`
+usage() {
+	echo -e "Usage: kversion\n  -a: show the build time"
+	return 0
+}
 
-if [ -z "$PRODUCT_NAME" ]; then
-	PRODUCT_NAME=$NO_MODEL_NAME
-fi
-
-case "${1}" in
-	-a|--all)
-		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
+main() {
+	case ${1} in
+	"-a")
+		/bin/mx-ver -a
 		;;
-	-s|--serial)
-		echo "$PCBA_SERIAL"
-		;;
-	-t|--type)
-		echo "$PCBA_TYPE"
-		;;
-	-p|--pcba)
-		echo "$PCBA_VERSION"
-		;;
-	-v|--verbose)
-		echo "$PRODUCT_NAME version `cat /etc/.moxaversion` Build `cat /etc/.moxabuildtime`"
-		echo "PCBA version $PCBA_VERSION Serial $PCBA_SERIAL Type $PCBA_TYPE"
-		;;
-	-h|--help)
-		echo -e "Usage:"
-		echo -e "	kversion [OPTIONS]"
-		echo -e "Options:"
-		echo -e "	-a, --all		show firmware version and build date"
-		echo -e "	-s, --serial		show PCBA serial number"
-		echo -e "	-t, --type		show PCBA type number(00-CPU Board, 01-Carrier Board, 02-Riser card)"
-		echo -e "	-p, --pcba		show PCBA version"
-		echo -e "	-v, --verbose		verbose mode. show the model name, PCBA version, PCBA serial number, PCBA type, firmware version and build date"
-		echo -e "	-h, --help		show this help page"
+	"")
+		echo $(mx-ver -m) version $(mx-ver -v)
 		;;
 	*)
-		echo "$PRODUCT_NAME version `cat /etc/.moxaversion`"
-		;;
-esac
+		usage >&2
+		return 1
+	esac
+	return 0
+}
+
+if [ "$#" -gt 1 ]; then
+	usage >&2
+	exit 99
+fi
+
+main "$@"
+exit 0
