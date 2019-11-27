@@ -1,3 +1,11 @@
+v2406c-system (1.1.2) stretch; urgency=low
+
+  * fix: update control for package renaming and revision
+  * feat: add debian symlink file to resolve load ath10k QCA6174 binary file error
+  * fix: fix mx-audio-retask for variable inputs and bump to 1.0.1
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 26 Nov 2019 15:34:53 +0800
+
 v2406c-system (1.1.1) stretch; urgency=low
 
   * feat: add moxa HDA retasking utility
