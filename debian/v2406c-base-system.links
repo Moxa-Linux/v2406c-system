@@ -1,0 +1,5 @@
+/lib/firmware/ath10k/QCA6174/hw3.0/firmware-4.bin /lib/firmware/ath10k/QCA6174/hw3.0/firmware-5.bin
+/lib/firmware/ath10k/QCA6174/hw3.0/board.bin /lib/firmware/ath10k/pre-cal-pci-0000:03:00.0.bin
+/lib/firmware/ath10k/QCA6174/hw3.0/board.bin /lib/firmware/ath10k/pre-cal-pci-0000:04:00.0.bin
+/lib/firmware/ath10k/QCA6174/hw3.0/board-2.bin /lib/firmware/ath10k/cal-pci-0000:03:00.0.bin
+/lib/firmware/ath10k/QCA6174/hw3.0/board-2.bin /lib/firmware/ath10k/cal-pci-0000:04:00.0.bin
