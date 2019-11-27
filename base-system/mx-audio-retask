@@ -13,7 +13,7 @@
 # Copyright (C) 2018-2019	Elvis Yao	<ElvisCW.Yao@moxa.com>
 #
 
-VERSION=1.0.0
+VERSION=1.0.1
 CONFIG_FILE=/etc/moxa-configs/moxa-audio-retask.conf
 AUDIO_FW_FILE=/lib/firmware/mx-audio-retask.fw
 AUDIO_LIB_FILE=/etc/modprobe.d/mx-audio-retask.conf
@@ -105,6 +105,7 @@ EOF
 write_hda_fw_file() {
 	local port=${1}
 	local pincfg=${2}
+	local mode=${3}
 	local pin_id
 	local pin_index
 
@@ -148,7 +149,7 @@ EOF
 		sed -i "/$pin_id /c\\$pin_id $pincfg" $AUDIO_FW_FILE
 	fi
 
-	echo "Write audio fw file is succeeded."
+	echo "Setup Port #${port} as [Mode ${mode}] into fw file is succeeded."
 	echo "Please reboot to finish audio retask setup."
 }
 
@@ -226,7 +227,7 @@ do_action() {
 		fi
 
 		# Generate snd-hda-intel firmware file
-		write_hda_fw_file $port $pin_conf
+		write_hda_fw_file $port $pin_conf $act_arg
 	else
 		echo "Error: Unknown action: ${action}" >&2
 		echo "Please run \`mx-audio-retask -h\` for help." >&2
@@ -239,7 +240,7 @@ main() {
 	local port=1
 	local act_arg
 
-	if [ $# -lt 2 ]; then usage; exit 0; fi
+	if [ $# -eq 0 ]; then usage; exit 0; fi
 
 	while true; do
 		case "${1}" in
