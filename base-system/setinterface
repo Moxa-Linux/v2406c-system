@@ -64,8 +64,8 @@ main() {
 MAX_GPIO_PORT_NUM=$(ls /dev/ttyM* | wc -l)
 MAX_GPIO_PORT_NUM=$(($MAX_GPIO_PORT_NUM-1))
 
-#check number of input parameters are valid
-if [ $# -eq 0 ] || [ $# -gt 2 ]; then
+# if input parameters are empty, show usage
+if [ $# -eq 0 ]; then
 	usage
 	exit -1
 fi
