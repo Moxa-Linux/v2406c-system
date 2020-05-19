@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$1" = "post" ] && [ "$2" = "suspend" ]; then
+	systemctl restart moxa-module-control
+	systemctl restart mx_hotswapd
+fi
+
+exit 0
