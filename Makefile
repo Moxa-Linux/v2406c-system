@@ -6,7 +6,7 @@
 # Wes Huang (Wes.Huang@moxa.com)
 
 # source code name
-MOXA_VERSION_CFG=moxa-configs/moxa-version.conf
+MOXA_VERSION_CFG=base-system/etc/moxa-configs/moxa-version.conf
 
 PKG_FW_VERSION ?= develop
 PKG_BUILDDATE ?= $(shell date +%y%m%d%H)
