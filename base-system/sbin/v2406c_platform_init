@@ -91,25 +91,10 @@ initial_it87_uart() {
 	/sbin/mx-uart-ctl -p 3 -m 0
 }
 
-initial_dio() {
-	# setup DIO output pins (DO0~DO1)
-	init_gpio "494" "out" "0"
-	init_gpio "495" "out" "0"
-
-	# export DIO input pins (DI0~DI5)
-	init_gpio "488"
-	init_gpio "489"
-	init_gpio "490"
-	init_gpio "491"
-	init_gpio "492"
-	init_gpio "493"
-}
-
 case "$1" in
 	start)
 		bind_hwm_driver
 		initial_it87_uart
-		initial_dio
 	;;
 	stop)
 		unbind_hwm_driver
