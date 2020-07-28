@@ -1,3 +1,17 @@
+v2406c-system (1.2.0+deb9) stretch; urgency=low
+
+  * debian: update packages depends to Debian 9.12
+  * debian: install base-system to root folder
+  * debian: remove postinst due to not used
+  * debian: remove moxa-config package
+  * debian: rename platform init service
+  * refactor: DIO init is handled by mx-dio-ctl
+  * refactor: deprected security settings
+  * fix: remove setup DIO output value when boot
+  * feat: support MXview 3.0
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Tue, 28 Jul 2020 17:33:10 +0800
+
 v2406c-system (1.1.2) stretch; urgency=low
 
   * fix: update control for package renaming and revision
