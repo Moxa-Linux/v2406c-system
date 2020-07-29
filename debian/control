@@ -9,26 +9,31 @@ Homepage: https://www.moxa.com/
 Package: v2406c-base-system
 Architecture: any
 Depends: ${misc:Depends},
-         v2406c-moxa-configs (= ${binary:Version}),
-         moxa-version (>= 1.1.0),
-         moxa-uart-control (>= 1.1.6),
-         moxa-module-control (>= 1.3.1),
-         moxa-dio-control (>= 1.2.0),
-         moxa-cellular-utils (>= 2.0.5),
-         moxa-v2406c-hotswapd (>= 1.0.1+deb9),
-         moxa-hotswap-driver-amd64 (>= 1.0.1),
-         moxa-hwmon-ina2xx-driver-amd64 (>= 4.9.168+1.0.0),
-         moxa-atheros-ath10k-driver-amd64 (>= 4.9.198+1.0.0),
-         moxa-it87-gpio-driver-amd64 (>= 5.2+1.0.0),
-         moxa-it87-serial-driver-amd64 (>= 1.0.0),
-         moxa-it87-wdt-driver-amd64 (>= 5.2+1.0.0),
-         firmware-atheros (= 20161130-5)
+         libmoxa-dio-control1 (>= 1.2.0+deb9),
+         libmoxa-dio-control-dev (>= 1.2.0+deb9),
+         libmoxa-gpio-control1 (>= 1.0.3+deb9),
+         libmoxa-gpio-control-dev (>= 1.0.3+deb9),
+         libmoxa-uart-control1 (>= 1.1.6+deb9),
+         libmoxa-uart-control-dev (>= 1.1.6+deb9),
+         moxa-version (>= 1.1.0+deb9),
+         moxa-uart-control (>= 1.1.6+deb9),
+         moxa-module-control (>= 1.4.0),
+         moxa-dio-control (>= 1.2.0+deb9),
+         moxa-cellular-utils (>= 2.5.2),
+         moxa-hwmon-ina2xx-driver-amd64 (>= 4.9.168+1.1.0),
+         moxa-atheros-ath10k-driver-amd64 (>= 4.9.198+1.1.0),
+         moxa-it87-gpio-driver-amd64 (>= 5.2+1.1.0),
+         moxa-it87-serial-driver-amd64 (>= 1.1.0),
+         moxa-it87-wdt-driver-amd64 (>= 5.2+1.1.0),
+         moxa-v2406c-hotswapd (>= 1.0.2+deb9),
+         moxa-hotswap-driver-amd64 (>= 1.1.0),
+         firmware-atheros (= 20161130-5),
+         tpm2-tools (>= 3.1.3-2),
+         libtss2-udev (>= 2.1.0-4),
+         libtss2-esys0 (>= 2.1.0-4),
+         snmpd (>= 5.7.3),
+         lldpd (>= 0.9.6-1),
+         lm-sensors (>= 1:3.4.0-4),
+         wpasupplicant
 Description: Moxa V-2406C base system
  It contains the necessary tools for setting up V-2406C
-
-Package: v2406c-moxa-configs
-Architecture: all
-Depends: ${misc:Depends}
-Description: V-2406C platform configuration file
- The platform-related configuration items are recoreded in this file,
- these items will be referred to other platform packages
