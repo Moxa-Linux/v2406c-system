@@ -9,23 +9,43 @@
 #	For Moxa V-2406C series
 #
 
-init_gpio () {
+gpio_request() {
 	local gpio=${1}
-	local direction=${2}
-	local value=${3}
-	local active_low=${4}
 
-	if [ ! -e "/sys/class/gpio/gpio${gpio}" ]; then
-		echo ${gpio} > "/sys/class/gpio/export"
+	if [ ! -e "/sys/class/gpio/gpio${gpio}" ]
+	then
+		echo "${gpio}" > /sys/class/gpio/export
 	fi
+}
 
-	if [ "${direction}" == "out" ]; then
-                echo ${direction} > "/sys/class/gpio/gpio${gpio}/direction"
-                [ ! -z "${active_low}" ] && \
-                        echo ${active_low} > "/sys/class/gpio/gpio${gpio}/active_low"
-                [ ! -z "${value}" ] && \
-                        echo ${value} > "/sys/class/gpio/gpio${gpio}/value"
-	fi
+gpio_set_value() {
+	local gpio=${1}
+	local value=${2}
+
+	gpio_request "${gpio}"
+	case "${value}" in
+	0)
+		echo "low" > "/sys/class/gpio/gpio${gpio}/direction"
+		;;
+	1)
+		echo "high" > "/sys/class/gpio/gpio${gpio}/direction"
+		;;
+	esac
+}
+
+gp() {
+	for gpiochip in /sys/class/gpio/gpiochip*
+	do
+		if cat "${gpiochip}"/label | grep -q "gpio_it87"
+		then
+			base=$(cat "${gpiochip}"/base)
+			break
+		fi
+	done
+
+	tens=$(($1 / 10))
+	units=$(($1 % 10))
+	echo $((base + 8 * (tens - 1) + units))
 }
 
 bind_hwm_driver() {
@@ -64,25 +84,25 @@ unbind_hwm_driver() {
 }
 
 initial_it87_uart() {
-	# Port 1
-	init_gpio "444" "out" "0"
-	init_gpio "441" "out" "0"
-	init_gpio "442" "out" "0"
+	# UART 1 GPIO init
+	gpio_set_value "$(gp 14)" 0 # GP14 UR1_232EN
+	gpio_set_value "$(gp 11)" 0 # GP11 UR1_485
+	gpio_set_value "$(gp 12)" 0 # GP12 UR1_422
 
-	# Port 2
-	init_gpio "456" "out" "0"
-	init_gpio "445" "out" "0"
-	init_gpio "446" "out" "0"
+	# UART 2 GPIO init
+	gpio_set_value "$(gp 30)" 0 # GP30 UR2_232EN
+	gpio_set_value "$(gp 15)" 0 # GP15 UR2_485
+	gpio_set_value "$(gp 16)" 0 # GP16 UR2_422
 
-	# Port 3
-	init_gpio "462" "out" "0"
-	init_gpio "458" "out" "0"
-	init_gpio "459" "out" "0"
+	# UART 3 GPIO init
+	gpio_set_value "$(gp 36)" 0 # GP36 UR3_232EN
+	gpio_set_value "$(gp 32)" 0 # GP32 UR3_485
+	gpio_set_value "$(gp 33)" 0 # GP33 UR3_422
 
-	# Port 4
-	init_gpio "472" "out" "0"
-	init_gpio "463" "out" "0"
-	init_gpio "471" "out" "0"
+	# UART 4 GPIO init
+	gpio_set_value "$(gp 50)" 0 # GP50 UR4_232EN
+	gpio_set_value "$(gp 37)" 0 # GP37 UR4_485
+	gpio_set_value "$(gp 47)" 0 # GP47 UR4_422
 
 	# setup UART port0~3 default mode as RS-232
 	/sbin/mx-uart-ctl -p 0 -m 0
@@ -94,6 +114,7 @@ initial_it87_uart() {
 case "$1" in
 	start)
 		bind_hwm_driver
+		get_gpio_it87_base
 		initial_it87_uart
 	;;
 	stop)
