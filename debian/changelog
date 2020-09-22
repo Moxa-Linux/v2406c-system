@@ -1,3 +1,10 @@
+v2406c-system (1.2.1+deb9) stretch; urgency=low
+
+  * refactor: update moxa-module-control to auto setup base gpio number
+  * refactor: update init gpio method when init
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Mon, 21 Sep 2020 20:18:03 +0800
+
 v2406c-system (1.2.0+deb9) stretch; urgency=low
 
   * debian: update packages depends to Debian 9.12
