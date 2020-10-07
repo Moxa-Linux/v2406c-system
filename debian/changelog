@@ -1,3 +1,13 @@
+v2406c-system (1.2.2+deb9) stretch; urgency=low
+
+  * debian: update packages depends to Debian 9.13
+  * debian: update moxa-cellular-utils depends on 2.10.0
+  * debian: change it87 watchdog driver package as moxa-it87-wdt-driver-4.9.0-amd64
+  * refactor: ci: remove auto filling FW_VERSION when building with gitlab-ci
+  * refactor: remove auto filling FW_VERSION function
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Wed, 07 Oct 2020 14:50:00 +0800
+
 v2406c-system (1.2.1+deb9) stretch; urgency=low
 
   * refactor: update moxa-module-control to auto setup base gpio number
