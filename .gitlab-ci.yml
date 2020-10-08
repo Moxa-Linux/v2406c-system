@@ -9,12 +9,8 @@ mil-internal-release_build:
     tags:
         - Runner-Stretch
     stage: mil-internal-release_build
-    only:
-      variables:
-        - $version
     script:
         - export TZ="Asia/Taipei"
-        - export PKG_FW_VERSION=${version}
         - export PKG_BUILDDATE=$(date +%y%m%d%H)
         - dpkg --add-architecture amd64
         - echo "deb http://mil-internal-apt:8080/mirror-debian_20200211/ stretch main contrib non-free" > /etc/apt/sources.list
@@ -22,7 +18,6 @@ mil-internal-release_build:
         - apt-get update
         - apt-get install build-essential libc6-dev -y --allow-unauthenticated
         - dpkg-buildpackage -us -uc -b -aamd64
-        - echo "The package firmware version=${PKG_FW_VERSION}"
         - echo "The package build date=${PKG_BUILDDATE}"
         - mv ../*.deb .
         - mv ../*.buildinfo .
@@ -41,8 +36,6 @@ prepare_mil-internal-release_debs:
     only:
       refs:
         - stretch/master
-      variables:
-        - $version
     dependencies:
         - mil-internal-release_build
     when: manual
