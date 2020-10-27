@@ -1,3 +1,12 @@
+v2406c-system (1.2.3+deb9) stretch; urgency=low
+
+  * debian: add moxa-snmpd-support-package depends into control file
+  * refactor: snmpd.local.conf is replaced by moxa-snmpd-support-package
+  * refactor: move v2406c-base-system.service to base-system
+  * fix: update moxa-module-control config for power status
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Mon, 26 Oct 2020 15:14:43 +0800
+
 v2406c-system (1.2.2+deb9) stretch; urgency=low
 
   * debian: update packages depends to Debian 9.13
