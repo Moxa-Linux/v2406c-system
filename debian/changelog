@@ -1,3 +1,9 @@
+v2406c-system (1.2.4+deb9) stretch; urgency=low
+
+  * debian: update packages dependency in control file 
+
+ -- Elvis Yao (姚家瑋) <ElvisCW.Yao@moxa.com>  Wed, 28 Oct 2020 10:51:27 +0800
+
 v2406c-system (1.2.3+deb9) stretch; urgency=low
 
   * debian: add moxa-snmpd-support-package depends into control file
